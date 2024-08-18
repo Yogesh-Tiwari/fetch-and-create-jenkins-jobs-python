@@ -7,10 +7,9 @@ with open('secrets/secret.json','r') as file:
 
 server = jenkins.Jenkins('http://localhost:8080',username=config.get('username'),password=config.get('password'))
 
-parentFolderName = 'testing'
+parentFolderName = 'config'
 
 jobs=server.get_jobs()
-print(jobs)
 os.makedirs(parentFolderName,exist_ok=True)
 
 
