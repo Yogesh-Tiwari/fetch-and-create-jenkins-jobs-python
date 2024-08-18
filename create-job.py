@@ -16,7 +16,7 @@ for job in jobs:
             with open("{}.xml".format(childJob['name']),'w') as file:
                 file.write(server.get_job_config("{}/{}".format(job['name'],childJob['name'])))
     else:
-        with open(job['name'],'w') as file:
+        with open("{}.xml".format(job['name']),'w') as file:
             file.write(server.get_job_config(job['name']))
 
 
