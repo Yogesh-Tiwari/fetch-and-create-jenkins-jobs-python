@@ -1,0 +1,24 @@
+[
+    {
+        '_class': 'com.cloudbees.hudson.plugins.folder.Folder',
+        'name': 'parent', 
+        'url': 'http://localhost:8080/job/parent/', 
+        'jobs': 
+            [
+                {
+                    '_class': 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject',
+                    'name': 'multibranch-pipeline-child', 
+                    'url': 'http://localhost:8080/job/parent/job/multibranch-pipeline-child/', 
+                    'jobs': []
+                }
+            ],
+        'fullname': 'parent'
+    }, 
+    {
+        '_class': 'org.jenkinsci.plugins.workflow.job.WorkflowJob', 
+        'name': 'test-py-script-101', 
+        'url': 'http://localhost:8080/job/test-py-script-101/', 
+        'color': 'notbuilt',
+        'fullname': 'test-py-script-101'
+    }
+]
