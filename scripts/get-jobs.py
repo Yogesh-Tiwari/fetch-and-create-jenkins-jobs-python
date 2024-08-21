@@ -19,7 +19,7 @@ def createJobsInFolder(parentFolderPath,jobs):
             newPath = "{}/{}".format(parentFolderPath,item["name"])
             os.makedirs(newPath,exist_ok=True)
 
-            with open("{}/{}.xml".format(newPath,item['name']),'w') as file:
+            with open("{}/{}.xml".format(parentFolderPath,item['name']),'w') as file:
                 file.write(server.get_job_config(job['name']))
 
             createJobsInFolder(newPath,item['jobs'])
@@ -37,7 +37,7 @@ for job in jobs:
         os.makedirs(newPath,exist_ok=True)
 
         # create folder .xml file
-        with open("{}/{}.xml".format(newPath,job['name']),'w') as file:
+        with open("{}/{}.xml".format(parentFolderName,job['name']),'w') as file:
             file.write(server.get_job_config(job['name']))
 
         createJobsInFolder(newPath,job['jobs'])
