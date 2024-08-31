@@ -1,4 +1,70 @@
-To install the jenkins wrapper python module, use the command:
+# Jenkins Job Manager
 
-pip install python-jenkins
+## Overview
 
+This repository contains Python scripts designed to interact with Jenkins, a popular open-source automation server. The scripts allow you to retrieve and create Jenkins jobs using the Jenkins REST API.
+
+## Contents
+
+- **scripts Directory**: Contains Python scripts for managing Jenkins jobs.
+  - `get-jobs.py`: Retrieves jobs from Jenkins and saves their configuration as XML files.
+  - `create-jobs.py`: Creates Jenkins jobs from XML configuration files.
+- **Secrets Configuration**: The file `secrets/secret.json` contains sensitive configuration details such as Jenkins URL, username, password (or personal access token), and the folder name where job XML files are stored or created.
+
+## Setup
+
+1. **Install Dependencies**:
+
+   Ensure you have the necessary Python package installed. This project uses `python-jenkins`, a Python wrapper for the Jenkins REST API. Install it using pip:
+
+   pip install python-jenkins
+
+
+2. **Configure Secrets**:
+
+   Create a file named `secret.json` inside the `secrets` directory with the following structure:
+
+   {
+     "url": "http://your-jenkins-url",
+     "username": "your-username",
+     "password_or_token": "your-password-or-token",
+     "config_folder": "path/to/jobs/folder"
+   }
+
+   Make sure to replace the placeholders with your actual Jenkins URL, credentials, and desired folder path.
+
+## Usage
+
+1. **Retrieve Jenkins Jobs**:
+
+   To retrieve Jenkins jobs and save their XML configurations, run:
+
+   python scripts/get-jobs.py
+
+
+   This will fetch jobs from Jenkins and store the XML files in the folder specified in the `secret.json` file.
+
+2. **Create Jenkins Jobs**:
+
+   To create Jenkins jobs from existing XML files, use:
+
+
+   python scripts/create-jobs.py
+
+
+   The script will read XML files from the folder specified in `secret.json` and create jobs in Jenkins based on those configurations.
+
+## Hot Tip
+
+If you want to temporarily ignore changes to the `secret.json` file and avoid tracking its modifications in Git, use:
+
+git update-index --assume-unchanged secrets/secret.json
+
+To start tracking changes to the `secret.json` file again, run:
+
+git update-index --no-assume-unchanged secrets/secret.json
+
+## Contributing
+If you have any suggestions or improvements for this project, feel free to submit a pull request or open an issue. Contributions and feedback are welcome!
+
+Thank you for using Jenkins Job Manager. Happy coding!
