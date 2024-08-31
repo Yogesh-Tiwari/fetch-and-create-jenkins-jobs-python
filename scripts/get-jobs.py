@@ -8,7 +8,7 @@ def load_config(file_path: str) -> Dict:
         return json.load(file)
 
 def connect_to_jenkins(config: Dict) -> jenkins.Jenkins:
-    return jenkins.Jenkins('http://localhost:8080', 
+    return jenkins.Jenkins(config.get('url'), 
                            username=config.get('username'), 
                            password=config.get('password'))
 
@@ -36,7 +36,7 @@ def process_jobs(server: jenkins.Jenkins, parent_path: str, jobs: List[Dict], pa
 def main():
     config = load_config('secrets/secret.json')
     server = connect_to_jenkins(config)
-    parent_folder_name = 'config'
+    parent_folder_name = config.get('config_folder')
     create_folder(parent_folder_name)
     jobs = server.get_jobs()
     process_jobs(server, parent_folder_name, jobs)

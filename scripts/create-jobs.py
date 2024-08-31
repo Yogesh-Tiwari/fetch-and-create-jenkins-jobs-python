@@ -8,8 +8,8 @@ with open('secrets/secret.json', 'r') as file:
     config = json.load(file)
 
 # Jenkins server setup
-SERVER = jenkins.Jenkins('http://localhost:8080', username=config.get('username'), password=config.get('password'))
-PARENT_FOLDER = 'config'
+SERVER = jenkins.Jenkins(config.get('url'), username=config.get('username'), password=config.get('password'))
+PARENT_FOLDER = config.get('config_folder')
 
 def create_job(job_url, config_xml):
     """Create a Jenkins job."""
