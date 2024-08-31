@@ -2,162 +2,46 @@ import os
 import jenkins
 import json
 from pathlib import Path
-import glob
 
-with open('secrets/secret.json','r') as file:
+# Load configuration
+with open('secrets/secret.json', 'r') as file:
     config = json.load(file)
 
+# Jenkins server setup
+SERVER = jenkins.Jenkins('http://localhost:8080', username=config.get('username'), password=config.get('password'))
+PARENT_FOLDER = 'config'
 
-parentFolderName = 'config'
-server = jenkins.Jenkins('http://localhost:8080',username=config.get('username'),password=config.get('password'))
+def create_job(job_url, config_xml):
+    """Create a Jenkins job."""
+    print(f"Creating job: {job_url}")
+    SERVER.create_job(job_url, config_xml)
 
+def process_file(file_path):
+    """Process a single XML file and create a Jenkins job."""
+    with open(file_path, 'r') as config:
+        config_xml = config.read()
+        job_url = str(file_path).replace(f"{PARENT_FOLDER}\\", "").replace(".xml", "").replace("\\", "/")
+        create_job(job_url, config_xml)
 
+def sort_files_and_folders(folder_path):
+    """Sort files first, then folders in a given directory."""
+    items = os.listdir(folder_path)
+    files = [item for item in items if os.path.isfile(os.path.join(folder_path, item))]
+    folders = [item for item in items if os.path.isdir(os.path.join(folder_path, item))]
+    return files + folders
 
-def createJobsInFolder(folderPath):
-    print(folderPath)
-    for job in sortFilesAndFolders(folderPath):
-        if (os.path.isfile(job)):
-            with open(job,'r') as config:
-                configXML = config.read()
-                jobName = Path(job).stem
-                jobURL = job.replace(f"{parentFolderName}\\","").replace(f"xml",'').replace("\\","/")[0:-1]
-                server.create_job(jobURL,configXML)
-        else:
-            createJobsInFolder(job)
+def process_folder(folder_path):
+    """Process all files and subfolders in a given folder, files first."""
+    for item in sort_files_and_folders(folder_path):
+        item_path = os.path.join(folder_path, item)
+        if os.path.isfile(item_path) and item.endswith('.xml'):
+            process_file(item_path)
+        elif os.path.isdir(item_path):
+            process_folder(item_path)
 
+def main():
+    """Main function to start the job creation process."""
+    process_folder(PARENT_FOLDER)
 
-
-
-
-def sortFilesAndFolders(folderName):
-    filesFirstFolderSecondList=[]
-    filesList=[]
-    foldersList=[]
-
-    for file in os.listdir(folderName):
-        filePath = os.path.join(folderName,file)
-        if(os.path.isdir(filePath)):
-            foldersList.append(filePath)
-        elif os.path.isfile(filePath):
-            filesList.append(filePath)
-
-    filesFirstFolderSecondList = filesList+foldersList
-    return filesFirstFolderSecondList
-
-
-for job in sortFilesAndFolders(parentFolderName):
-    print(job)
-    if (os.path.isfile(job)):
-        with open(job,'r') as config:
-            configXML = config.read()
-            jobURL = str(job).replace(f"{parentFolderName}\\","").replace(f"xml",'').replace("\\","/")[0:-1]
-            server.create_job(jobURL,configXML)
-    else:
-        createJobsInFolder(job)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# already_created_folders = set()
-# def createJob(folderPath):
-#     for file in os.listdir(folderPath):
-#         filepath = Path(os.path.join(folderPath,file))
-#         # print("fielpath at top :{} ".format(filepath))
-#         if os.path.isdir(filepath):
-#             # create parent folder job first
-#             jobName = filepath.stem
-#             search_pattern = os.path.join(filepath, "{}.xml".format(jobName))
-#             file_path = glob.glob(search_pattern)
-
-#             with open(file_path[0],'r') as config:
-#                 configXML = config.read()
-#                 # jobURL = file_path[0].replace("config\\","").replace("\\",'/').replace(jobName,"")
-#                 jobURL = file_path[0].replace("config\\","").replace(f"{jobName}.xml",'').replace("\\","/")[0:-1]
-#                 print(f"IF BLOCK: job being created with url: {jobURL} with name {jobName}")
-#                 server.create_job(jobURL,configXML)
-                
-#             already_created_folders.add(file_path[0])
-
-#             # print("filepath here is: {}".format(filepath))
-
-#             for file in os.listdir(filepath):
-#                 if f"{jobName}.xml" in file:
-#                     continue;
-                
-#                 thisFilePath = os.path.join(filepath,file)
-
-#                 if os.path.isdir(thisFilePath):
-#                     print(f"IF BLOCK +++ : job being created with url: {jobURL} with name {jobName}")
-#                     createJob(filepath)
-
-#                 else:
-#                     with open(thisFilePath,'r') as config:
-#                         configXML = config.read()
-#                         jobURL = str(thisFilePath).replace("config\\","").replace(".xml","").replace("\\","/")
-#                         print(f"ELSE BLOCK--: job being created with url: {jobURL} with name {filepath.stem}")
-#                         server.create_job(jobURL,configXML)
-        
-#         elif filepath in already_created_folders:
-#             continue
-            
-#         else:
-#             with open(filepath,'r') as config:
-#                 configXML = config.read()
-#                 jobURL = str(filepath).replace("config\\","").replace(".xml","").replace("\\","/")
-#                 print(f"ELSE BLOCK: job being created with url: {jobURL} with name {filepath.stem}")
-#                 server.create_job(jobURL,configXML)
-
-            
-
-
-
-
-
-
-
-
-
-#         #     for file in filesInFolder:
-#         #         if os.path.isdir(file):
-#         #             createJob("{}/{}".format(os.getcwd(),file))
-
-#         #         elif file == "{}.xml".format(jobName):
-#         #             with open(file,'r') as config:
-#         #                 configXML = config.read()
-#         #                 print("create job called with {}".format(jobName))
-#         #                 server.create_job(jobName,configXML)
-#         #         else:
-#         #             with open(file,'r') as config:
-#         #                 configXML = config.read()
-#         #                 thisJobName = file.split('.')[0]
-#         #                 print("create job called with {}".format(thisJobName))
-#         #                 server.create_job("{}/{}".format(jobName,thisJobName),configXML)
-#         #     os.chdir('..')
-#         # else:
-#         #     with open(filepath,'r') as config:
-#         #             configXML = config.read()
-#         #             thisJobName = file.split('.')[0]
-#         #             print("create job called with {}".format(thisJobName))
-#         #             server.create_job(thisJobName,configXML)
-
-
-
-
-# createJob(parentFolderName)
+if __name__ == "__main__":
+    main()
