@@ -1,49 +1,45 @@
 import jenkins
 import json
 import os
+from typing import List, Dict
 
-with open('secrets/secret.json','r') as file:
-    config = json.load(file)
+def load_config(file_path: str) -> Dict:
+    with open(file_path, 'r') as file:
+        return json.load(file)
 
-server = jenkins.Jenkins('http://localhost:8080',username=config.get('username'),password=config.get('password'))
+def connect_to_jenkins(config: Dict) -> jenkins.Jenkins:
+    return jenkins.Jenkins('http://localhost:8080', 
+                           username=config.get('username'), 
+                           password=config.get('password'))
 
-parentFolderName = 'config'
+def create_folder(path: str) -> None:
+    os.makedirs(path, exist_ok=True)
 
-jobs=server.get_jobs()
-os.makedirs(parentFolderName,exist_ok=True)
+def write_job_config(server: jenkins.Jenkins, job_path: str, job_name: str) -> None:
+    full_path = f"{job_path}.xml"
+    with open(full_path, 'w') as file:
+        file.write(server.get_job_config(job_name))
 
+def process_jobs(server: jenkins.Jenkins, parent_path: str, jobs: List[Dict], parent_name: str = '') -> None:
+    for job in jobs:
+        job_name = job['name']
+        full_job_name = f"{parent_name}/{job_name}" if parent_name else job_name
+        job_path = os.path.join(parent_path, job_name)
 
-def createJobsInFolder(parentFolderPath,jobs):
-    for item in jobs:
-        if(item["_class"]=='com.cloudbees.hudson.plugins.folder.Folder'):
-            newPath = "{}/{}".format(parentFolderPath,item["name"])
-            os.makedirs(newPath,exist_ok=True)
-
-            with open("{}/{}.xml".format(parentFolderPath,item['name']),'w') as file:
-                file.write(server.get_job_config(job['name']))
-
-            createJobsInFolder(newPath,item['jobs'])
+        if job["_class"] == 'com.cloudbees.hudson.plugins.folder.Folder':
+            create_folder(job_path)
+            write_job_config(server, os.path.join(parent_path, job_name), full_job_name)
+            process_jobs(server, job_path, job.get('jobs', []), full_job_name)
         else:
-            with open("{}/{}.xml".format(parentFolderPath,item['name']),'w') as file:
-                temp = parentFolderPath.replace("{}/".format(parentFolderName),"")
-                file.write(server.get_job_config("{}/{}".format(temp,item['name'])))
+            write_job_config(server, os.path.join(parent_path, job_name), full_job_name)
 
+def main():
+    config = load_config('secrets/secret.json')
+    server = connect_to_jenkins(config)
+    parent_folder_name = 'config'
+    create_folder(parent_folder_name)
+    jobs = server.get_jobs()
+    process_jobs(server, parent_folder_name, jobs)
 
-for job in jobs:
-    if(job["_class"]=='com.cloudbees.hudson.plugins.folder.Folder'):
-        newPath = "{}/{}".format(parentFolderName,job['name'])
-        
-        # create new folder for the child jobs
-        os.makedirs(newPath,exist_ok=True)
-
-        # create folder .xml file
-        with open("{}/{}.xml".format(parentFolderName,job['name']),'w') as file:
-            file.write(server.get_job_config(job['name']))
-
-        createJobsInFolder(newPath,job['jobs'])
-    else:
-        with open("{}/{}.xml".format(parentFolderName,job['name']),'w') as file:
-            file.write(server.get_job_config(job['name']))
-
-
-
+if __name__ == "__main__":
+    main()
