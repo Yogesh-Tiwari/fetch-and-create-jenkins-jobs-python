@@ -27,7 +27,7 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
    {
      "url": "http://your-jenkins-url",
      "username": "your-username",
-     "password_or_token": "your-password-or-token",
+     "password": "your-password-or-token",
      "config_folder": "path/to/jobs/folder"
    }
 
