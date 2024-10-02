@@ -2,13 +2,14 @@
 
 ## Overview
 
-This repository contains Python scripts designed to interact with Jenkins, a popular open-source automation server. The scripts allow you to retrieve and create Jenkins jobs using the Jenkins REST API.
+This repository contains Python scripts designed to interact with Jenkins, a popular open-source automation server. The scripts allow you to retrieve, create Jenkins jobs and interact with plugins using the Jenkins REST API.
 
 ## Contents
 
 - **scripts Directory**: Contains Python scripts for managing Jenkins jobs.
   - `get-jobs.py`: Retrieves jobs from Jenkins and saves their configuration as XML files.
   - `create-jobs.py`: Creates Jenkins jobs from XML configuration files.
+  - `install-plugins.py`: Installs plugins in Jenkins.
 - **Secrets Configuration**: The file `secrets/secret.json` contains sensitive configuration details such as Jenkins URL, username, password (or personal access token), and the folder name where job XML files are stored or created.
 
 ## Setup
