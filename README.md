@@ -70,7 +70,12 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
    server = connect_to_jenkins(config, skip_ssl_verification=True)
 
    This will allow you to connect to Jenkins without verifying the SSL certificate.
-   
+
+Known Issues:
+   Error while installing plugins:
+   To resolve the issue, refer to the following PR: https://review.opendev.org/c/jjb/python-jenkins/+/719059.
+   =>To find the installed plugin path, we need to use the following command: pip show python-jenkins.
+
 
 ## Hot Tip
 

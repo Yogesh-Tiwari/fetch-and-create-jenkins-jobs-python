@@ -27,9 +27,6 @@ def main():
     parent_folder_name = config.get('config_folder')
     create_folder(parent_folder_name)
     jobs = server.get_jobs()
-    # https://review.opendev.org/c/jjb/python-jenkins/+/719059 (install plugins error resolved PR link).
-    # To find the installed plugin path, we need to use the following command: pip show python-jenkins.
-    install_plugins(server, config.get('plugins', []))
     process_jobs(server, parent_folder_name, jobs)
 
 if __name__ == "__main__":
