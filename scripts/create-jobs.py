@@ -2,26 +2,20 @@ import os
 import jenkins
 import json
 from pathlib import Path
+from utils import *
 
-# Load configuration
-with open('secrets/secret.json', 'r') as file:
-    config = json.load(file)
 
-# Jenkins server setup
-SERVER = jenkins.Jenkins(config.get('url'), username=config.get('username'), password=config.get('password'))
-PARENT_FOLDER = config.get('config_folder')
 
-def create_job(job_url, config_xml):
-    """Create a Jenkins job."""
-    print(f"Creating job: {job_url}")
-    SERVER.create_job(job_url, config_xml)
 
 def process_file(file_path):
     """Process a single XML file and create a Jenkins job."""
     with open(file_path, 'r') as config:
         config_xml = config.read()
         job_url = str(file_path).replace(f"{PARENT_FOLDER}\\", "").replace(".xml", "").replace("\\", "/")
-        create_job(job_url, config_xml)
+        try:
+            create_job(SERVER, job_url, config_xml)
+        except Exception as e:
+            print(f"ERROR: Skipping {job_url} due to following error: {e}")
 
 def sort_files_and_folders(folder_path):
     """Sort files first, then folders in a given directory."""
@@ -41,6 +35,11 @@ def process_folder(folder_path):
 
 def main():
     """Main function to start the job creation process."""
+    global SERVER
+    global PARENT_FOLDER
+    config = load_config('secrets/secret.json')
+    SERVER = connect_to_jenkins(config, skip_ssl_verification=True)
+    PARENT_FOLDER = config.get('config_folder')
     process_folder(PARENT_FOLDER)
 
 if __name__ == "__main__":
