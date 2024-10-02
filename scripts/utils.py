@@ -26,12 +26,6 @@ def write_job_config(server: jenkins.Jenkins, job_path: str, job_name: str, enco
     with open(full_path, 'w', encoding=encoding ) as file:
         file.write(server.get_job_config(job_name))
 
-def get_plugins(server: jenkins.Jenkins) -> List[Dict]:
-    return server.get_plugins()
-
-def install_plugins(server: jenkins.Jenkins, plugins: List) -> None:
-    for plugin in plugins:
-        server.install_plugin(plugin, include_dependencies=True)
 
 def create_job(server: jenkins.Jenkins, job_url, config_xml):
     """Create a Jenkins job."""
