@@ -2,30 +2,11 @@ import jenkins
 import json
 import os
 from typing import List, Dict
+from utils import *
 
-def load_config(file_path: str) -> Dict:
-    with open(file_path, 'r') as file:
-        return json.load(file)
 
-def connect_to_jenkins(config: Dict) -> jenkins.Jenkins:
-    return jenkins.Jenkins(config.get('url'), 
-                           username=config.get('username'), 
-                           password=config.get('password'))
 
-def create_folder(path: str) -> None:
-    os.makedirs(path, exist_ok=True)
 
-def write_job_config(server: jenkins.Jenkins, job_path: str, job_name: str) -> None:
-    full_path = f"{job_path}.xml"
-    with open(full_path, 'w') as file:
-        file.write(server.get_job_config(job_name))
-
-def get_plugins(server: jenkins.Jenkins) -> List[Dict]:
-    return server.get_plugins()
-
-def install_plugins(server: jenkins.Jenkins, plugins: List) -> None:
-    for plugin in plugins:
-        server.install_plugin(plugin, include_dependencies=True)
 
 def process_jobs(server: jenkins.Jenkins, parent_path: str, jobs: List[Dict], parent_name: str = '') -> None:
     for job in jobs:
@@ -42,7 +23,7 @@ def process_jobs(server: jenkins.Jenkins, parent_path: str, jobs: List[Dict], pa
 
 def main():
     config = load_config('secrets/secret.json')
-    server = connect_to_jenkins(config)
+    server = connect_to_jenkins(config, skip_ssl_verification=False)
     parent_folder_name = config.get('config_folder')
     create_folder(parent_folder_name)
     jobs = server.get_jobs()
