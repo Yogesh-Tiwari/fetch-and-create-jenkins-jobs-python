@@ -19,7 +19,6 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
 
    pip install python-jenkins
 
-
 2. **Configure Secrets**:
 
    Create a file named `secret.json` inside the `secrets` directory with the following structure:
@@ -54,6 +53,24 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
 
 
    The script will read XML files from the folder specified in `secret.json` and create jobs in Jenkins based on those configurations.
+
+3. **Install Plugins**:
+
+   To install plugins in Jenkins, use:
+
+   python scripts/install-plugins.py
+
+
+   This will install the plugins specified in `secret.json` on the Jenkins server.
+
+4. **Skip SSL Verification**:
+
+   If you want to skip SSL verification, you can do so by adding the following parameter to the `connect_to_jenkins` function:
+
+   server = connect_to_jenkins(config, skip_ssl_verification=True)
+
+   This will allow you to connect to Jenkins without verifying the SSL certificate.
+   
 
 ## Hot Tip
 
