@@ -72,7 +72,7 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
    This will allow you to connect to Jenkins without verifying the SSL certificate.
 
 ## Known Issues:
-   Error while installing plugins (python-jenkins version 1.8.2):
+   Error while installing plugins `(python-jenkins version 1.8.2)`:
    To resolve, edit the files specified in the PR to resolve the issue with installing plugins: https://review.opendev.org/c/jjb/python-jenkins/+/719059.
    To find the installed plugin path, we need to use the following command: "pip show python-jenkins" and refer to Location in the output.
 
