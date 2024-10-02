@@ -67,7 +67,7 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
 
    If you want to skip SSL verification, you can do so by adding the following parameter to the `connect_to_jenkins` function:
 
-   server = connect_to_jenkins(config, skip_ssl_verification=True)
+   `server = connect_to_jenkins(config, skip_ssl_verification=True)`
 
    This will allow you to connect to Jenkins without verifying the SSL certificate.
 
