@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains Python scripts designed to interact with Jenkins, a popular open-source automation server. The scripts allow you to retrieve, create Jenkins jobs and interact with plugins using the Jenkins REST API.
+This repository contains Python scripts designed to interact with Jenkins, a popular open-source automation server. The scripts allow you to retrieve, create Jenkins jobs and interact with plugins using the Jenkins REST API. The special feature is that it stores and creates jobs in a same hierarchy as shown in the Jenkins web UI.
 
 ## Contents
 
