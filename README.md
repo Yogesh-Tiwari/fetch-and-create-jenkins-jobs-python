@@ -28,7 +28,7 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
      "username": "your-username",
      "password_or_token": "your-password-or-token",
      "config_folder": "path/to/jobs/folder",
-     "plugins": ["plugin-name"]
+     "plugins": ["plugin-name-01", "plugin-name-02", "plugin-name-n"]
    }
 
    Make sure to replace the placeholders with your actual Jenkins URL, credentials, and desired folder path.
@@ -39,7 +39,7 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
 
    To retrieve Jenkins jobs and save their XML configurations, run:
 
-   python scripts/get-jobs.py
+   `python scripts/get-jobs.py`
 
 
    This will fetch jobs from Jenkins and store the XML files in the folder specified in the `secret.json` file.
@@ -49,7 +49,7 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
    To create Jenkins jobs from existing XML files, use:
 
 
-   python scripts/create-jobs.py
+   `python scripts/create-jobs.py`
 
 
    The script will read XML files from the folder specified in `secret.json` and create jobs in Jenkins based on those configurations.
@@ -58,7 +58,7 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
 
    To install plugins in Jenkins, use:
 
-   python scripts/install-plugins.py
+   `python scripts/install-plugins.py`
 
 
    This will install the plugins specified in `secret.json` on the Jenkins server.
@@ -71,21 +71,21 @@ This repository contains Python scripts designed to interact with Jenkins, a pop
 
    This will allow you to connect to Jenkins without verifying the SSL certificate.
 
-Known Issues:
+## Known Issues:
    Error while installing plugins (python-jenkins version 1.8.2):
    To resolve, edit the files specified in the PR to resolve the issue with installing plugins: https://review.opendev.org/c/jjb/python-jenkins/+/719059.
    To find the installed plugin path, we need to use the following command: "pip show python-jenkins" and refer to Location in the output.
 
 
-## Hot Tip
+## Git Bonus Tip
 
 If you want to temporarily ignore changes to the `secret.json` file and avoid tracking its modifications in Git, use:
 
-git update-index --assume-unchanged secrets/secret.json
+`git update-index --assume-unchanged secrets/secret.json`
 
 To start tracking changes to the `secret.json` file again, run:
 
-git update-index --no-assume-unchanged secrets/secret.json
+`git update-index --no-assume-unchanged secrets/secret.json`
 
 ## Contributing
 If you have any suggestions or improvements for this project, feel free to submit a pull request or open an issue. Contributions and feedback are welcome!
